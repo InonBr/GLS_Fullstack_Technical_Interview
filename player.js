@@ -15,20 +15,20 @@ $.ajax({
 
     // read css and call it for use (head)
     let css_style = response.data.css;
-    let style = $(`<style>${css_style}</style>`);
+    const style = $(`<style>${css_style}</style>`);
     $('head')[0].appendChild(style[0]);
 
-    // console.log(link);
+    // read tip HTML and call it for use (body)
+    let tip = response.data.tiplates['tip'];
+    const tipElement = $(tip);
+    $('body')[0].appendChild(tipElement[0]);
 
-    // console.log(response.data.structure.steps[0].action.classes);
-
-    let newDiv = $(
-      `<div class="${response.data.structure.steps[0].action.classes}">${response.data.structure.steps[0].action.contents['#content']}</div>`
+    // select element from tip (to edit)
+    const popoverContent = tipElement.find('.popover-content').children();
+    popoverContent.addClass(response.data.structure.steps[0].action.classes);
+    popoverContent.html(
+      response.data.structure.steps[0].action.contents['#content']
     );
-
-    $('body')[0].appendChild(newDiv[0]);
-
-    console.log(newDiv[0]);
 
     // selector.classList.add(response.data.structure.steps[0].action.classes);
     // selector.style.display = 'block';
