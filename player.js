@@ -18,10 +18,15 @@ $.ajax({
 
     // read tip HTML and call it for use (body)
     let tip = response.data.tiplates['tip'];
-    const tipElement = $(tip);
-    $('body')[0].appendChild(tipElement[0]);
+    const tipElement = $(`<div class=tip-div>${tip}</div>`);
+    $('body').prepend(tipElement[0]);
 
     // select element from tip (to edit)
+
+    // select close btn and create event
+    let closeBtb = tipElement.find('.popover-title').children()[0];
+    console.log(closeBtb);
+
     // set steps (1/5 for axample)
     let stepElement = tipElement.find('.steps-count').children();
     stepElement.html(response.data.structure.steps[0].action.stepOrdinal);
