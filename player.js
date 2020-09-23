@@ -9,9 +9,7 @@ $.ajax({
 
   // get response from server
   success: function (response) {
-    let selector = document.querySelector(
-      response.data.structure.steps[0].action.selector
-    );
+    const selector = response.data.structure.steps;
 
     // read css and call it for use (head)
     let css_style = response.data.css;
@@ -24,22 +22,15 @@ $.ajax({
     $('body')[0].appendChild(tipElement[0]);
 
     // select element from tip (to edit)
-    const popoverContent = tipElement.find('.popover-content').children();
+    // set steps (1/5 for axample)
+    let stepElement = tipElement.find('.steps-count').children();
+    stepElement.html(response.data.structure.steps[0].action.stepOrdinal);
+    $('.steps-count span:nth-child(2)').html(selector.length);
+
+    let popoverContent = tipElement.find('.popover-content').children();
     popoverContent.addClass(response.data.structure.steps[0].action.classes);
     popoverContent.html(
       response.data.structure.steps[0].action.contents['#content']
     );
-
-    // selector.classList.add(response.data.structure.steps[0].action.classes);
-    // selector.style.display = 'block';
-    // response.data.structure.steps[0].action.classes.style.display = 'block';
-    // response.data.structure.steps[0].action.classes[0].innerHTML =
-    //   response.data.structure.steps[0].action.contents;
-    // response.data.structure.steps[0].action.classes.innerHTML =
-    //   response.data.structure.steps[0].action.contents;
-    // selector.classList.add(response.data.structure.steps[0].action.classes);
-
-    // console.log(response.data.structure.steps[0].action.contents['#content']);
-    // console.log(newDiv);
   },
 });
