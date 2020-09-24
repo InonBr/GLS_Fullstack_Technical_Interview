@@ -12,9 +12,11 @@ $.ajax({
     const selector = response.data.structure.steps;
 
     // read css and call it for use (head)
-    const cssStyle = response.data.css;
-    const style = $(`<style>${cssStyle}</style>`);
-    $('head')[0].appendChild(style[0]);
+    // const cssStyle = response.data.css;
+    // const style = $(`<style>${cssStyle}</style>`);
+    // $('head')[0].appendChild(style[0]);
+
+    $('<style>').text(response.data.css).appendTo(document.head);
 
     // read tip HTML and call it for use (body)
     const tip = response.data.tiplates['tip'];
@@ -36,15 +38,56 @@ $.ajax({
       $('#tip-div-wrapper').css('display', 'none');
     });
 
-    // set steps (1/5)
-    let stepElement = tipElement.find('.steps-count').children();
-    stepElement.html(response.data.structure.steps[0].action.stepOrdinal);
-    $('.steps-count span:nth-child(2)').html(selector.length);
+    // set next button function
+    $(nextButton).click(function (courrentStep) {
+      courrentStep++;
+    });
 
-    let popoverContent = tipElement.find('.popover-content').children();
-    popoverContent.addClass(response.data.structure.steps[0].action.classes);
-    popoverContent.html(
-      response.data.structure.steps[0].action.contents['#content']
-    );
+    // set back button function
+    $(backButton).click(function (courrentStep) {
+      courrentStep--;
+    });
+
+    /* 
+        run the program custom loop
+        next/back step if user passes Next or Back buttons
+        or after the countdown of "warningTimeout"
+    */
+    let courrentStep = 0;
+    const runLoop = () => {
+      setTimeout(function () {
+        // set steps (1/4)
+        let stepElement = tipElement.find('.steps-count').children();
+        if (courrentStep > 2) {
+          stepElement.html(4);
+        } else {
+          stepElement.html(
+            response.data.structure.steps[courrentStep].action.stepOrdinal
+          );
+        }
+        $('.steps-count span:nth-child(2)').html(selector.length - 1);
+
+        // set content
+        let popoverContent = tipElement.find('.popover-content').children();
+        popoverContent.addClass(
+          response.data.structure.steps[courrentStep].action.classes
+        );
+        popoverContent.html(
+          response.data.structure.steps[courrentStep].action.contents[
+            '#content'
+          ]
+        );
+
+        console.log('hello world');
+        courrentStep++;
+        if (courrentStep < selector.length - 1) {
+          runLoop();
+        }
+      }, response.data.structure.steps[0].action.warningTimeout);
+    };
+
+    $(document).ready(function () {
+      runLoop();
+    });
   },
 });
