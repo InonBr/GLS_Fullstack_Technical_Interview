@@ -38,24 +38,39 @@ $.ajax({
       $('#tip-div-wrapper').css('display', 'none');
     });
 
-    // set next button function
-    $(nextButton).click(function (courrentStep) {
-      courrentStep++;
+    // set next button
+    $(nextButton).click(function () {
+      $(this).data('clicked', true);
     });
 
-    // set back button function
-    $(backButton).click(function (courrentStep) {
+    // set back button
+    $(backButton).click(function () {
       courrentStep--;
     });
 
+    // timer function
+    function timer(ms) {
+      return new Promise((res) => setTimeout(res, ms));
+    }
+
     /* 
-        run the program custom loop
+        run the program (for loop)
         next/back step if user passes Next or Back buttons
         or after the countdown of "warningTimeout"
     */
-    let courrentStep = 0;
-    const runLoop = () => {
-      setTimeout(function () {
+
+    // response.data.structure.steps[courrentStep].action.warningTimeout
+    async function player(courrentStep) {
+      await timer(3000);
+      console.log('slow!');
+    }
+
+    async function main() {
+      for (
+        let courrentStep = 0;
+        courrentStep < selector.length - 1;
+        courrentStep++
+      ) {
         // set steps (1/4)
         let stepElement = tipElement.find('.steps-count').children();
         if (courrentStep > 2) {
@@ -78,16 +93,23 @@ $.ajax({
           ]
         );
 
-        console.log('hello world');
-        courrentStep++;
-        if (courrentStep < selector.length - 1) {
-          runLoop();
-        }
-      }, response.data.structure.steps[0].action.warningTimeout);
-    };
+        await player(courrentStep);
+      }
+    }
 
-    $(document).ready(function () {
-      runLoop();
-    });
+    main();
+
+    // if clicked back or next
+    // if ($(nextButton).data('clicked')) {
+    //   if (courrentStep + 1 < selector.length - 1) {
+    //     ++courrentStep;
+    //     runLoop();
+    //   }
+    // } else if ($(backButton).data('clicked')) {
+    //   if (courrentStep - 1 >= 0) {
+    //     --courrentStep;
+    //     runLoop();
+    //   }
+    // }
   },
 });
