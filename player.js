@@ -38,78 +38,52 @@ $.ajax({
       $('#tip-div-wrapper').css('display', 'none');
     });
 
+    // load html function
+    const loadHtml = (currentStep) => {
+      // set steps (1/4)
+      let stepElement = tipElement.find('.steps-count').children();
+      if (currentStep > 2) {
+        stepElement.html(4);
+      } else {
+        stepElement.html(
+          response.data.structure.steps[currentStep].action.stepOrdinal
+        );
+      }
+      $('.steps-count span:nth-child(2)').html(selector.length - 1);
+
+      // set content
+      let popoverContent = tipElement.find('.popover-content').children();
+      popoverContent.addClass(
+        response.data.structure.steps[currentStep].action.classes
+      );
+      popoverContent.html(
+        response.data.structure.steps[currentStep].action.contents['#content']
+      );
+    };
+
+    /* 
+        next/back step if user passes Next or Back buttons
+    */
+    let currentStep = 0;
+
     // set next button
     $(nextButton).click(function () {
-      $(this).data('clicked', true);
+      if (currentStep < 3) {
+        currentStep++;
+        loadHtml(currentStep);
+      }
     });
 
     // set back button
     $(backButton).click(function () {
-      courrentStep--;
+      if (currentStep > 0) {
+        currentStep--;
+        loadHtml(currentStep);
+      }
     });
 
-    // timer function
-    function timer(ms) {
-      return new Promise((res) => setTimeout(res, ms));
-    }
+    loadHtml(currentStep);
 
-    /* 
-        run the program (for loop)
-        next/back step if user passes Next or Back buttons
-        or after the countdown of "warningTimeout"
-    */
-
-    // response.data.structure.steps[courrentStep].action.warningTimeout
-    async function player(courrentStep) {
-      await timer(3000);
-      console.log('slow!');
-    }
-
-    async function main() {
-      for (
-        let courrentStep = 0;
-        courrentStep < selector.length - 1;
-        courrentStep++
-      ) {
-        // set steps (1/4)
-        let stepElement = tipElement.find('.steps-count').children();
-        if (courrentStep > 2) {
-          stepElement.html(4);
-        } else {
-          stepElement.html(
-            response.data.structure.steps[courrentStep].action.stepOrdinal
-          );
-        }
-        $('.steps-count span:nth-child(2)').html(selector.length - 1);
-
-        // set content
-        let popoverContent = tipElement.find('.popover-content').children();
-        popoverContent.addClass(
-          response.data.structure.steps[courrentStep].action.classes
-        );
-        popoverContent.html(
-          response.data.structure.steps[courrentStep].action.contents[
-            '#content'
-          ]
-        );
-
-        await player(courrentStep);
-      }
-    }
-
-    main();
-
-    // if clicked back or next
-    // if ($(nextButton).data('clicked')) {
-    //   if (courrentStep + 1 < selector.length - 1) {
-    //     ++courrentStep;
-    //     runLoop();
-    //   }
-    // } else if ($(backButton).data('clicked')) {
-    //   if (courrentStep - 1 >= 0) {
-    //     --courrentStep;
-    //     runLoop();
-    //   }
-    // }
+    console.log();
   },
 });
