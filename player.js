@@ -38,8 +38,10 @@ $.ajax({
       $('#tip-div-wrapper').css('display', 'none');
     });
 
+    let currentStep = 0;
+
     // load html function
-    const loadHtml = (currentStep) => {
+    const loadHtml = () => {
       // set steps (1/4)
       let stepElement = tipElement.find('.steps-count').children();
       if (currentStep > 2) {
@@ -61,44 +63,46 @@ $.ajax({
       );
     };
 
-    // function timedStep(currentStep) {
-    //   if (currentStep < selector.length - 2) {
-    //     t = setTimeout(function () {
-    //       currentStep++;
-    //       loadHtml(currentStep);
-    //       timedStep(currentStep);
-    //     }, response.data.structure.steps[currentStep].action['warningTimeout']);
-    //   }
-    // }
+    function timedStep() {
+      if (currentStep < selector.length - 2) {
+        t = setTimeout(function () {
+          currentStep++;
+          loadHtml(currentStep);
+          timedStep(currentStep);
+        }, response.data.structure.steps[currentStep].action['warningTimeout']);
+      }
+    }
 
-    // function stopCount() {
-    //   clearTimeout(t);
-    // }
+    function stopCount() {
+      clearTimeout(t);
+    }
 
     /* 
         next/back step if user passes Next or Back buttons
+        or next step if "warningTimeout" as passed
     */
-    let currentStep = 0;
 
     // set next button
     $(nextButton).click(function () {
-      //   stopCount();
+      stopCount();
       if (currentStep < selector.length - 2) {
         currentStep++;
         loadHtml(currentStep);
+        timedStep();
       }
     });
 
     // set back button
     $(backButton).click(function () {
-      //   stopCount();
+      stopCount();
       if (currentStep > 0) {
         currentStep--;
         loadHtml(currentStep);
+        timedStep();
       }
     });
 
-    loadHtml(currentStep);
-    // timedStep(currentStep);
+    loadHtml();
+    timedStep();
   },
 });
