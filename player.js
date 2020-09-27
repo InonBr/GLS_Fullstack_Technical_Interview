@@ -61,8 +61,22 @@ $.ajax({
       popoverContent.html(
         response.data.structure.steps[currentStep].action.contents['#content']
       );
+
+      // show and hide next and back buttons
+      if (stepElement.html() == 4) {
+        $(nextButton).css('display', 'none');
+      } else {
+        $(nextButton).css('display', 'block');
+      }
+
+      if (stepElement.html() == 1) {
+        $(backButton).css('display', 'none');
+      } else {
+        $(backButton).css('display', 'block');
+      }
     };
 
+    // setTimeout function for passing steps after "warningTimeout" as passed
     function timedStep() {
       if (currentStep < selector.length - 2) {
         t = setTimeout(function () {
@@ -73,7 +87,7 @@ $.ajax({
       }
     }
 
-    function stopCount() {
+    function stopCountdown() {
       clearTimeout(t);
     }
 
@@ -84,7 +98,7 @@ $.ajax({
 
     // set next button
     $(nextButton).click(function () {
-      stopCount();
+      stopCountdown();
       if (currentStep < selector.length - 2) {
         currentStep++;
         loadHtml(currentStep);
@@ -94,11 +108,11 @@ $.ajax({
 
     // set back button
     $(backButton).click(function () {
-      stopCount();
+      stopCountdown();
       if (currentStep > 0) {
         currentStep--;
         loadHtml(currentStep);
-        timedStep();
+        // timedStep();
       }
     });
 
