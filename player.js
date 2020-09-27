@@ -1,6 +1,6 @@
 $.ajax({
-  url:
-    'https://guidedlearning.oracle.com/player/latest/api/scenario/get/v_IlPvRLRWObwLnV5sTOaw/5szm2kaj/?callback=__5szm2kaj&amp;refresh=true&amp;env=dev&amp;type=startPanel&amp;vars%5Btype%5D=startPanel&amp;sid=none&amp;_=1582203987867',
+  url: './json_file.json',
+  // 'https://guidedlearning.oracle.com/player/latest/api/scenario/get/v_IlPvRLRWObwLnV5sTOaw/5szm2kaj/?callback=__5szm2kaj&amp;refresh=true&amp;env=dev&amp;type=startPanel&amp;vars%5Btype%5D=startPanel&amp;sid=none&amp;_=1582203987867',
   jsonp: 'callback',
   dataType: 'jsonp',
   data: {
@@ -77,7 +77,7 @@ $.ajax({
     };
 
     // setTimeout function for passing steps after "warningTimeout" as passed
-    function timedStep() {
+    const timedStep = () => {
       if (currentStep < selector.length - 2) {
         t = setTimeout(function () {
           currentStep++;
@@ -85,11 +85,11 @@ $.ajax({
           timedStep(currentStep);
         }, response.data.structure.steps[currentStep].action['warningTimeout']);
       }
-    }
+    };
 
-    function stopCountdown() {
+    const stopCountdown = () => {
       clearTimeout(t);
-    }
+    };
 
     /* 
         next/back step if user passes Next or Back buttons
