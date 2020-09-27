@@ -61,6 +61,20 @@ $.ajax({
       );
     };
 
+    // function timedStep(currentStep) {
+    //   if (currentStep < selector.length - 2) {
+    //     t = setTimeout(function () {
+    //       currentStep++;
+    //       loadHtml(currentStep);
+    //       timedStep(currentStep);
+    //     }, response.data.structure.steps[currentStep].action['warningTimeout']);
+    //   }
+    // }
+
+    // function stopCount() {
+    //   clearTimeout(t);
+    // }
+
     /* 
         next/back step if user passes Next or Back buttons
     */
@@ -68,7 +82,8 @@ $.ajax({
 
     // set next button
     $(nextButton).click(function () {
-      if (currentStep < 3) {
+      //   stopCount();
+      if (currentStep < selector.length - 2) {
         currentStep++;
         loadHtml(currentStep);
       }
@@ -76,6 +91,7 @@ $.ajax({
 
     // set back button
     $(backButton).click(function () {
+      //   stopCount();
       if (currentStep > 0) {
         currentStep--;
         loadHtml(currentStep);
@@ -83,7 +99,6 @@ $.ajax({
     });
 
     loadHtml(currentStep);
-
-    console.log();
+    // timedStep(currentStep);
   },
 });
